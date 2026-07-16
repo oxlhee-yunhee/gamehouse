@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/duo
+    username: duo
+    password: duo1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+
+jwt:
+  secret: duo-matching-dev-secret-key-change-me-in-production-0123456789
+  expiration-ms: 86400000
+
+app:
+  upload-dir: ./uploads
