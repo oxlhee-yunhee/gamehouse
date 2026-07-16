@@ -25,6 +25,12 @@ public class ApplicationController {
         applicationService.apply(postId, userId(auth));
     }
 
+    /** 신청자: 참가 신청 취소 */
+    @DeleteMapping("/api/posts/{postId}/apply")
+    public void cancel(@PathVariable Long postId, Authentication auth) {
+        applicationService.cancel(postId, userId(auth));
+    }
+
     /** 방장: 신청자 목록 */
     @GetMapping("/api/posts/{postId}/applications")
     public List<ApplicationDto> listForPost(@PathVariable Long postId, Authentication auth) {
