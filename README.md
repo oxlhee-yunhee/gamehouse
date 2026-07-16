@@ -71,7 +71,6 @@ npm run dev
 | GET | /api/notifications | 알림 목록 + 미읽음 수 |
 | WS | /ws → /app/rooms/{id} 발행, /topic/rooms/{id} 구독 | 그룹 채팅 |
 
-> ⚠️ 스키마가 변경되어 기존 DB로는 실행이 안 됩니다. `docker compose down -v && docker compose up -d` 로 DB를 초기화하세요.
 
 ## 구현 노트
 
