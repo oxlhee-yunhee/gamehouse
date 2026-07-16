@@ -5,6 +5,9 @@ import Chips, { MultiChips } from '../components/Chips';
 import { GAMES, GAME_MODES, POSITIONS, MEMBER_COUNTS } from '../constants';
 import { csv } from '../utils';
 
+const ANY_POSITION = '포지션 상관없음';
+const POST_POSITIONS = [ANY_POSITION, ...POSITIONS];
+
 export default function PostFormPage() {
   const navigate = useNavigate();
   const { id } = useParams(); // 있으면 수정 모드
@@ -59,6 +62,18 @@ export default function PostFormPage() {
     }
   };
 
+  const changePositions = (next) => {
+    if (!next.includes(ANY_POSITION)) {
+      setPositions(next);
+      return;
+    }
+    if (!positions.includes(ANY_POSITION)) {
+      setPositions([ANY_POSITION]);
+      return;
+    }
+    setPositions(next.filter((position) => position !== ANY_POSITION));
+  };
+
   return (
     <div className="page">
       <div className="center wide">
@@ -88,7 +103,7 @@ export default function PostFormPage() {
           </div>
 
           <p className="q">찾는 포지션 (복수 선택)</p>
-          <MultiChips options={POSITIONS} values={positions} onChange={setPositions} />
+          <MultiChips options={POST_POSITIONS} values={positions} onChange={changePositions} />
 
           <p className="q">희망 파티원 수 (본인 포함)</p>
           <div className="row">

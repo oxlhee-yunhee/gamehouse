@@ -47,6 +47,17 @@ public class ApplicationService {
                 "/post/" + post.getId());
     }
 
+    /** 신청자: 대기 중인 참가 신청 취소 */
+    @Transactional
+    public void cancel(Long postId, Long meId) {
+        Application app = applicationRepository.findByPostIdAndApplicantId(postId, meId)
+                .orElseThrow(() -> new IllegalArgumentException("취소할 참가 신청이 없습니다."));
+        if (app.getStatus() != Application.Status.PENDING)
+            throw new IllegalStateException("대기 중인 신청만 취소할 수 있습니다.");
+
+        applicationRepository.delete(app);
+    }
+
     /** 방장용: 신청자 목록 (만료된 대기 신청 제외) */
     @Transactional(readOnly = true)
     public List<ApplicationDto> listForPost(Long postId, Long meId) {

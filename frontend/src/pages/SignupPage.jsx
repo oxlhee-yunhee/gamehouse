@@ -11,11 +11,11 @@ export default function SignupPage() {
   const [nickname, setNickname] = useState(signupStore.nickname);
   const [preview, setPreview] = useState(signupStore.imagePreview);
   const [error, setError] = useState('');
-  // null: 미확인 | 'ok': 사용 가능 | 'dup': 중복
+  // null: 미인증 | 'ok': 인증 가능 | 'dup': 중복
   const [emailCheck, setEmailCheck] = useState(null);
   const [nicknameCheck, setNicknameCheck] = useState(null);
 
-  const checkEmail = async () => {
+  const verifyEmail = async () => {
     if (!email) return;
     const { data } = await api.get('/auth/check-email', { params: { email } });
     setEmailCheck(data.available ? 'ok' : 'dup');
@@ -42,9 +42,15 @@ export default function SignupPage() {
     return null;
   };
 
+  const emailCheckMsg = (status) => {
+    if (status === 'ok') return <p className="check-msg ok">이메일 인증이 완료되었습니다.</p>;
+    if (status === 'dup') return <p className="check-msg dup">이미 사용 중인 이메일입니다.</p>;
+    return null;
+  };
+
   const next = (e) => {
     e.preventDefault();
-    if (emailCheck !== 'ok') { setError('이메일 중복확인을 해주세요.'); return; }
+    if (emailCheck !== 'ok') { setError('이메일 인증을 완료해주세요.'); return; }
     if (nicknameCheck !== 'ok') { setError('닉네임 중복확인을 해주세요.'); return; }
     if (password !== passwordConfirm) { setError('비밀번호가 일치하지 않습니다.'); return; }
     if (password.length < 4) { setError('비밀번호는 4자 이상이어야 합니다.'); return; }
@@ -62,10 +68,10 @@ export default function SignupPage() {
                    value={email}
                    onChange={(e) => { setEmail(e.target.value); setEmailCheck(null); }}
                    required />
-            <button className="btn2 sm" type="button" onClick={checkEmail}
-                    style={{ height: 38 }}>중복확인</button>
+            <button className="btn2 sm" type="button" onClick={verifyEmail}
+                    style={{ height: 38 }}>이메일 인증</button>
           </div>
-          {checkMsg(emailCheck)}
+          {emailCheckMsg(emailCheck)}
 
           <input className="inp" type="password" placeholder="비밀번호"
                  value={password} onChange={(e) => setPassword(e.target.value)} required />

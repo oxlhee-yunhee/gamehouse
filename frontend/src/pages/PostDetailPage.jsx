@@ -37,6 +37,15 @@ export default function PostDetailPage() {
     } catch (err) { alert(errMsg(err)); }
   };
 
+  const cancelApplication = async () => {
+    if (!confirm('참가 신청을 취소할까요?')) return;
+    try {
+      await api.delete(`/posts/${id}/apply`);
+      alert('참가 신청이 취소되었습니다.');
+      load();
+    } catch (err) { alert(errMsg(err)); }
+  };
+
   const approve = async (appId) => {
     try {
       const { data } = await api.post(`/applications/${appId}/approve`);
@@ -137,7 +146,12 @@ export default function PostDetailPage() {
             {post.myApplicationStatus === null && recruiting && (
               <button className="btn" onClick={apply}>참가 신청</button>
             )}
-            {post.myApplicationStatus === 'PENDING' && <span className="tag">신청 대기중</span>}
+            {post.myApplicationStatus === 'PENDING' && (
+              <div className="flex">
+                <span className="tag">신청 대기중</span>
+                <button className="btn2 sm" onClick={cancelApplication}>신청 취소</button>
+              </div>
+            )}
             {(post.myApplicationStatus === 'APPROVED' || post.myApplicationStatus === 'CONFIRMED') && post.chatRoomId && (
               <button className="btn" onClick={() => navigate(`/chat/${post.chatRoomId}`)}>
                 {post.myApplicationStatus === 'CONFIRMED' ? '확정됨 — 파티 채팅방' : '승인됨 — 파티 채팅방'}
